@@ -1,0 +1,33 @@
+name: Build PROJECT DEADSHOT
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download source code
+        uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Check project files
+        run: |
+          echo "PROJECT DEADSHOT source files:"
+          find . -type f
+
+      - name: Build mod
+        run: |
+          if find . -name "*.csproj" | grep -q .; then
+            dotnet build $(find . -name "*.csproj" | head -n 1) -c Release
+          else
+            echo "No C# project found yet. Build will be added after the mod source is ready."
+          fi
